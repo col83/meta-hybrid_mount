@@ -84,20 +84,6 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.ARTIFACT_ZIP }}
+          archive: false
           compression-level: 0
           if-no-files-found: error
-
-      - name: Notify Telegram
-        if: github.event_name != 'pull_request'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          set -euo pipefail
-          rm -rf notify-output
-          mkdir notify-output
-          cp "$ARTIFACT_ZIP" notify-output/
-          cargo xtask notify \
-            --output notify-output \
-            --label "日常耕作 🌱 (Daily Tilling) - ${{ github.ref_name }}" \
-            --topic-id 37
